@@ -1,0 +1,21 @@
+Position,mean
+C,6.77871794871795
+F,6.635
+F-C,6.9
+FC,6.3635
+G,6.3195652173913
+G-F,6.65
+GF,6.73846153846154
+PF,6.53857142857143
+PG,6.12181818181818
+SF,6.71851851851852
+SG,6.51470588235294
+
+
+for(i=0; i<data.length; i++){
+	positions.push(data[i]["Position"])
+  average_height.push(data[i]["Height"])
+}
+
+console.log(positions);
+

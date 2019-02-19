@@ -18525,10 +18525,10 @@
 
     var x_axis = d3.axisBottom()
         .scale(xscale)
-        .ticks(positions.length)
+        .ticks(positions.length) 
         .tickFormat(function (d) {
 		      return positions[d];
-	      });
+	      }); 
         
         
     var y_axis = d3.axisLeft()
