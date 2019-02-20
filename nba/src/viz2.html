@@ -1,7 +1,8 @@
 <html>
   <head>
     <style>
-      body { font: 12px Arial;}
+
+body { font: 12px Arial;}
 
 path { 
     stroke: steelblue;
@@ -31,6 +32,16 @@ div.tooltip {
 }
 
 
+.tooltip {
+            position: absolute;
+            font-size: 12px;
+            width:  auto;
+            height: auto;
+            pointer-events: none;
+            background-color: white;
+        }
+        
+        
 .toolTip {
   position: absolute;
   display: none;
@@ -41,6 +52,13 @@ div.tooltip {
   padding: 14px;
   text-align: center;
 }
+
+
+.legend rect {
+  fill:white;
+  stroke:black;
+  opacity:0.8;}
+
     </style>
     <body>
 <script type="text/javascript" src = "https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
@@ -1203,10 +1221,8 @@ Active season,Player,Team,Conference,Date,Position,Height,Weight,Age,Draft Year,
 1,Kemba Walker,Charlotte Hornets,East,"Oct 22, 2018",G,6-1,184,28,2011,7,2018-2019,2019,0.5
 1,Nikola Jokic,Denver Nuggets,West,"Oct 22, 2018",C,7-0,250,24,2014,3,2018-2019,2019,0.5
 </script>
-
-<script type="text/javascript">
-
-// Prepare the data
+<script>
+  // Prepare the data
 
 let read_csv = file => {
 	let data = document.getElementById("nba.csv").innerHTML.trim()
@@ -1214,38 +1230,42 @@ let read_csv = file => {
 }
 
 var nbadata = read_csv('nba.csv');
-positions = {};
-players = [];
+
+player_data = {}
+players = []
 for(var i=0;i<nbadata.length;i++){
-	// take every player only once
-	var _player = nbadata[i].Player;  	
+
+	var _player = nbadata[i].Player; 
   if(players.indexOf(_player) == -1){
-    	var _position = nbadata[i].Position;
-      var _height = Number((parseFloat(nbadata[i].Height.replace("-","."))).toFixed(2));
-      
-      if(!positions[_position]) positions[_position] = [];
-      positions[_position].push(_height);
-      players.push(_player);
-    }
+  	player_data[_player] = {};
+    player_data[_player].height = parseFloat(nbadata[i].Height.replace("-",".")); 
+    player_data[_player].weight = parseInt(nbadata[i].Weight); 
+    player_data[_player].value = 1;
+    players.push(_player)
+  } else {
+  	player_data[_player].value += 1;
+  }
+	
 }
 
-function avg(array) {
-  return array.reduce(function (p, c) {
-    return p + c;
-  }) / array.length;
+var _data = []
+
+for (const [key, value] of Object.entries(player_data)) {
+	var tmp = {}
+  tmp.name = key;
+  tmp.height = value.height;
+  tmp.weight = value.weight;
+  tmp.value = value.value;
+  
+  _data.push(tmp);
 }
 
-var _data = [];
-var _positions = [];
-for (const [key, value] of Object.entries(positions)) {
-	var _tmp = {}
-  _tmp["Position"] = key;
-  _tmp["mean"] = avg(value);
-  _positions.push(key);
-  _data.push(_tmp);
-}
+_data.sort((a,b) => (a.value > b.value) ? -1 : ((b.value > a.value) ? 1 : 0)); 
 
-console.log(_data);
+most_valued = [];
+for(var i=0; i<10; i++){
+	most_valued.push(_data[i].name);
+}
 
 var width = 500;
 var height = 500;
@@ -1253,7 +1273,7 @@ var padding = 20;
 
 var margin = {
   top: 25,
-  left: 50,
+  left: 40,
   right: 25,
   bottom: 35
 };
@@ -1264,10 +1284,9 @@ var svg = d3.select("body")
   .attr("height", height);
 
 
-var xScale = d3.scaleBand()
-  .domain(_positions)
-  .rangeRound([margin.left, width-margin.right])
-  .padding(0.5);
+var xScale = d3.scaleLinear()
+  .domain([140,400])
+  .range([margin.left, width-margin.right]);
 
 var yScale = d3.scaleLinear()
   .domain([5,9])
@@ -1282,56 +1301,52 @@ var yAxis = svg.append("g")
   .attr("transform", `translate(${margin.left},0)`)
   .call(d3.axisLeft().scale(yScale));
 
-var tooltip = svg.append("g")
-    .attr("class", "tooltip")
-    .style("display", "none");
-
 var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
-var bar = svg.selectAll("rect") 
+var circle = svg.selectAll("circle") 
                 .data(_data)
                 .enter()
-                .append("rect")
-                  .attr("x", function(d) { return xScale(d.Position); })
-                  .attr("y", function(d) { return yScale(d.mean); })
-                  .attr("width", xScale.bandwidth())
-                  .attr("height", function(d) { return height-margin.bottom-yScale(d.mean); })
-                  .attr("fill", "Tomato")
-                  .attr("stroke", "Black")
-                  .attr("stroke-width", 3)
+                .append("circle")
+                  .attr("cx", function(d) { return xScale(d.weight); })
+                  .attr("cy", function(d) { return yScale(d.height); })
+                  .attr("r", 3)
+                  .attr("fill", function(d){
+                  if(most_valued.indexOf(d.name) != -1){
+                  	return "#7c0a02";
+                  } else{ return "#228B22"; }
+                  })
                   .on("mousemove", function(d){
-                                    tooltip
+                                 tooltip
                                 .style("left", d3.event.pageX - 50 + "px")
                                 .style("top", d3.event.pageY - 70 + "px")
                                 .style("display", "inline-block")
-                                .html((" Mean height:" + d.mean));
+                                .html((d.name));
                           }).on("mouseout", function(d){ tooltip.style("display", "none");});
-                           
-    
-        
-
- svg.append("text")
+                   
+                  
+svg.append("text")
     .attr("text-anchor", "middle")  
     .attr("transform", "translate("+ (padding/2) +","+(height/2)+")rotate(-90)")
-    .text("Average height");
-
-
+    .text("Height");
 
 
  svg.append("text")
     .attr("text-anchor", "middle")
-    .attr("transform", "translate("+ (width/2) +","+(506-(padding/3.5))+")")
-    .text("Position");
+    .attr("transform", "translate("+ (width/2) +","+(width-(padding/3.5))+")")
+    .text("Weight");
     
  svg.append("text")
     .attr("dy", "30")
     .attr("dx", "70")
     .style("font-size", "14px")  
-    .text("Barchart of Average Height of Players in NBA for different Positions");   
-            
-    
-    
+    .text("Scatter Plot of Height-Weight of Players in the NBA")
+ 
+ svg.append("text")
+  	.attr("dy", "50")
+    .attr("dx", "120")
+    .style("font-size", "14px")  
+    .text("(Top 10 players marked in red)")
+                 
 </script>
-</body>
-</html>
-
+    </body>
+    </html>
