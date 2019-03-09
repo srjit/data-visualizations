@@ -1,2 +1,2 @@
 # data-visualizations
-Simple Data Visualizations from random datasets
+Simple Data VisuData/Modeling Visualizations from a number of publicly available datasets.
