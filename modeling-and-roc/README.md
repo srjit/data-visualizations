@@ -27,4 +27,12 @@ Folder **d3**
 6) See the ROC plot being displayed
 
 
+Important Note: If the plot is not displayed, please check if there is the following error on the javascript console:
 
+```Access to fetch at 'http://127.0.0.1:5000/roc/standard/1' from origin 'http://0.0.0.0:8000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.```
+
+If this error comes, please install this browser extension:
+
+https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi/related?hl=en
+
+And the code should run as expected.
