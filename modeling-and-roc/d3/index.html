@@ -1,0 +1,62 @@
+
+<html>
+  <head>
+    <style>
+      path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+    </style>
+    <meta charset="UTF-8">
+    <title>DS 5500: Client-Server Visualization and Modeling</title>
+  </head>
+
+  <body>
+    <link href="bootstrap.css"  rel="stylesheet" media="screen">
+    <h3 class="title" align="center" style="font-family:'Lato">ROC Plot</h3>
+    <hr style="width: 100%; color: black; height: 1px; background-color:black;" />
+
+    <div class="container-fluid" style="padding-top:10px;">
+    <div class="row">
+
+      <div class="col-md-6">
+
+	<div class="form-group">
+	  <label for="">Specify Hyperparameter (C) </label>
+	  <input type="number" class="form-control" id="c" />
+	</div>
+
+	<div class="form-group">
+	  <label for="exampleFormControlSelect1">Select Scaling Type</label>
+	  <select class="form-control" id="scaling">
+	    <option value="" selected disabled>Please select</option> 
+	    <option value="standard"> Standard </option>
+	    <option value="min-max"> Min Max Scaling </option>
+	  </select>
+	</div>
+	
+	<input name="updateButton" 
+	       type="button" 
+	       value="Plot"
+	       class="btn btn-primary"
+	       onclick="connect()" />
+    </div>
+    <div class="col-md-6">
+	<div id="chart">
+	</div>
+    </div>
+    </div>
+  </div>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
