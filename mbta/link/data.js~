@@ -1,2 +1,0 @@
-
-var dispatch = d3.dispatch("dataLoaded");
