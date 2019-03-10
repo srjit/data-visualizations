@@ -8,12 +8,12 @@ function connect() {
     
     d3.json(url1).then(function(data) {
 	document.getElementById('chart').innerHTML = "";
-	drawLine(JSON.parse(data));
+	drawROCPlot(JSON.parse(data));
     });
 }
 
 
-function drawLine(data){
+function drawROCPlot(data){
 
     var margin = {top: 30, right: 61, bottom: 70, left: 61}, 
 	width = 640 - margin.left - margin.right,
