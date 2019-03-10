@@ -53,16 +53,6 @@ function drawLine(data){
 	.attr("class", "line")
 	.attr("d", roc)
 
-    // svg.append("line")
-    // 	.attr("x1", xScale(0))
-    // 	.attr("y1", yScale(0))
-    // 	.attr("x2", xScale(1))
-    // 	.attr("y2", yScale(1))
-//	.attr("stroke-width", 2)
-//	.attr("stroke", "black")
-//	.attr("stroke-dasharray", "5,5");  
-    
-    
     svg.append("text")
 	.attr("transform", "rotate(0)")
 	.attr("y", (margin.bottom+350))
