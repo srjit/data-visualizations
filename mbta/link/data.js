@@ -79,15 +79,14 @@ dispatch.on("stationHovered.pie", function(station) {
 });
 
 
-dispatch.on("stationHovered.nodelink", function(_station) {
-    var nodes = simulation.nodes();
-    console.log(nodes);
-    
-    if (_station) {
-	nodes.attr("fill", "#ffffff");
-	console.log("hiii")
+dispatch.on("stationHovered.nodelink", function(station) {
+    var nodes = nodelinkSvg.selectAll("circle");
+    console.log(station);
+    if (station) {
+	nodes.attr("fill","D3D3D3");
+	nodes.filter(function(d){return d.name === station.id;
+				}).selectAll("circle").attr("fill", "B22222")
     } else {
-	console.log("foo");
-	nodes.attr("fill", "#A9A9A9");
+	nodes.attr("fill","D3D3D3");
     }
 });
