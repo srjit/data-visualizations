@@ -25,8 +25,8 @@ function setupNodelink(graph)
         .enter().append("circle")
         .attr("r", function(d) { return Math.sqrt(d.entrances / 100) })
         .attr("fill", function(d) { return '#' + d.color; })
-	.on('mouseover', function(d) {
-	    dispatch.call("stationHovered", null, d.data);
+      	.on('mouseover', function(d) {
+	    dispatch.call("stationHovered", null, d);
 	})
         .on('mouseout', function(d) {
 	    dispatch.call("stationHovered", null, null);
@@ -37,7 +37,13 @@ function setupNodelink(graph)
             .on("end", dragended));
 
     node.append("title")
-        .text(function(d) { return d.name; });
+      	.on('mouseover', function(d) {
+	    dispatch.call("stationHovered", null, d.data);
+	})
+        .on('mouseout', function(d) {
+	    dispatch.call("stationHovered", null, null);
+	}) 
+       .text(function(d) { return d.name; });
 
     simulation
         .nodes(graph.nodes)
@@ -109,7 +115,7 @@ function brushended() {
 
     if(!s)
     {
-        alert('selected 0 nodes');
+	dispatch.call("nodesUpdated", null, null);
         return;
     }
     var x = [s[0][0], s[1][0]];
@@ -129,5 +135,6 @@ function brushended() {
         }
     });
 
-    alert('selected ' + selectedNodes.length + ' nodes');
+    console.log("hiiii");
+    dispatch.call("nodesUpdated", null, selectedNodes);
 }

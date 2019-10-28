@@ -1,5 +1,5 @@
 
-var dispatch = d3.dispatch("dataLoaded","stationHovered");
+var dispatch = d3.dispatch("dataLoaded","stationHovered", "nodesUpdated");
 
 
 d3.json("stations.json", function(error, stations)
@@ -81,12 +81,17 @@ dispatch.on("stationHovered.pie", function(station) {
 
 dispatch.on("stationHovered.nodelink", function(station) {
     var nodes = nodelinkSvg.selectAll("circle");
-    console.log(station);
     if (station) {
-	nodes.attr("fill","D3D3D3");
-	nodes.filter(function(d){return d.name === station.id;
-				}).selectAll("circle").attr("fill", "B22222")
+	nodes.filter(function(d){
+	    return d.id === station.id;
+				      }).attr("fill","FFFF00");
     } else {
-	nodes.attr("fill","D3D3D3");
+	nodes.attr("fill", function(d) { return '#' + d.color; });
     }
 });
+
+
+dispatch.on("nodesUpdated.nodelink", function(_selectedNodes){
+    visUpdated(_selectedNodes)   
+});
+
